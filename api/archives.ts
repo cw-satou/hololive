@@ -7,6 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const memberId = req.query.member_id as string | undefined;
     const limit = parseInt(String(req.query.limit ?? "30"), 10);
     let channelId: string | undefined;
+    let from: string | undefined;
 
     if (memberId) {
       const member = getMemberById(memberId);
@@ -19,9 +20,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         );
         channelId = ch?.id;
       }
+      // メンバー絞り込み時は1年前から最大50件取得
+      const oneYearAgo = new Date();
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+      from = oneYearAgo.toISOString();
     }
 
-    const archives = await getRecentArchives(channelId, limit);
+    const effectiveLimit = memberId ? 50 : limit;
+    const archives = await getRecentArchives(channelId, effectiveLimit, from);
     res.json(archives.map(normalizeVideo));
   } catch (err) {
     res.status(500).json({ error: String(err) });

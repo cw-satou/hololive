@@ -56,7 +56,7 @@ export async function getLiveStreams(channelIds?: string[]): Promise<HolodexVide
   return videos.filter((v) => v.status === "live" || v.status === "upcoming");
 }
 
-export async function getRecentArchives(channelId?: string, limit = 20): Promise<HolodexVideo[]> {
+export async function getRecentArchives(channelId?: string, limit = 20, from?: string): Promise<HolodexVideo[]> {
   const url = new URL(`${HOLODEX_BASE_URL}/videos`);
   url.searchParams.set("org", HOLOLIVE_ORG);
   url.searchParams.set("type", "stream");
@@ -65,6 +65,7 @@ export async function getRecentArchives(channelId?: string, limit = 20): Promise
   url.searchParams.set("sort", "published_at");
   url.searchParams.set("order", "desc");
   if (channelId) url.searchParams.set("channel_id", channelId);
+  if (from) url.searchParams.set("from", from);
   const res = await fetch(url.toString(), { headers: headers() });
   if (!res.ok) throw new Error(`Holodex archives error: ${res.status}`);
   return res.json();
