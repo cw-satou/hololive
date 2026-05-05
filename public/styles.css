@@ -271,6 +271,15 @@ body {
   text-decoration: underline;
 }
 
+/* ===== フィルター行 ===== */
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  max-width: 480px;
+}
+
 /* ===== フォーム ===== */
 
 .analyze-form {

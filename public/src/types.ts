@@ -83,6 +83,7 @@ export interface AppState {
   clipVideos: Video[];
   analyzeVideoId: string;
   analyzeResult: AnalyzeResult | null;
+  archiveMemberId: string;
   searchMemberId: string;
   searchKeyword: string;
   loading: Record<string, boolean>;

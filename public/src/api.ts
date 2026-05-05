@@ -33,11 +33,11 @@ export async function fetchSchedule(memberIds?: string[]): Promise<Video[]> {
 
 // アーカイブ一覧
 export async function fetchArchives(
-  channelId?: string,
-  limit = 20
+  memberId?: string,
+  limit = 30
 ): Promise<Video[]> {
   const params = new URLSearchParams({ limit: String(limit) });
-  if (channelId) params.set("channel_id", channelId);
+  if (memberId) params.set("member_id", memberId);
   return fetchJSON<Video[]>(`/api/archives?${params}`);
 }
 

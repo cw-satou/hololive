@@ -12,6 +12,7 @@ export const state: AppState = {
   clipVideos: [],
   analyzeVideoId: "",
   analyzeResult: null,
+  archiveMemberId: "",
   searchMemberId: "",
   searchKeyword: "",
   loading: {},

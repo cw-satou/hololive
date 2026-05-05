@@ -64,7 +64,7 @@ async function loadArchives(): Promise<void> {
   setLoading("archives", true);
   clearError("archives");
   try {
-    state.archiveVideos = await fetchArchives(undefined, 30);
+    state.archiveVideos = await fetchArchives(state.archiveMemberId || undefined, 30);
   } catch (e) {
     setError("archives", (e as Error).message);
   } finally {
@@ -75,7 +75,7 @@ async function loadArchives(): Promise<void> {
 // ===== 切り抜きタブ =====
 
 async function loadClips(): Promise<void> {
-  if (state.clipVideos.length) return; // 初回のみ取得
+  if (state.clipVideos.length) return;
   setLoading("clips", true);
   clearError("clips");
   try {
@@ -119,10 +119,22 @@ analyzeForm?.addEventListener("submit", async (e) => {
   }
 });
 
+// ===== アーカイブ メンバー絞り込み =====
+
+const archiveMemberSelect = document.getElementById("archive-member-select") as HTMLSelectElement;
+const archiveFilterBtn = document.getElementById("archive-filter-btn") as HTMLButtonElement;
+
+archiveMemberSelect?.addEventListener("change", () => {
+  state.archiveMemberId = archiveMemberSelect.value;
+});
+
+archiveFilterBtn?.addEventListener("click", () => {
+  loadArchives();
+});
+
 // ===== 描画 =====
 
 function render(): void {
-  // タブのアクティブ状態
   tabButtons.forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.tab === state.activeTab);
   });
@@ -130,7 +142,6 @@ function render(): void {
     panel.classList.toggle("active", panel.id === `tab-${state.activeTab}`);
   });
 
-  // 各タブの描画
   renderSchedulePanel();
   renderArchivesPanel();
   renderClipsPanel();
@@ -169,6 +180,10 @@ function renderArchivesPanel(): void {
   }
   if (state.errors["archives"]) {
     container.appendChild(renderError(state.errors["archives"]));
+    return;
+  }
+  if (!state.archiveVideos.length) {
+    container.innerHTML = `<p class="empty-message">アーカイブが見つかりませんでした</p>`;
     return;
   }
   state.archiveVideos.forEach((v) => container.appendChild(renderVideoCard(v)));
@@ -243,14 +258,22 @@ function renderMemberFilters(): void {
     );
   });
 
-  if (analyzeMemberSelect) {
-    analyzeMemberSelect.innerHTML = `<option value="">-- メンバーを選択（任意） --</option>`;
+  // 分析・アーカイブのセレクトボックスを更新
+  [analyzeMemberSelect, archiveMemberSelect].forEach((sel) => {
+    if (!sel) return;
+    const currentVal = sel.value;
+    sel.innerHTML = `<option value="">-- 全メンバー --</option>`;
     state.members.forEach((m) => {
       const opt = document.createElement("option");
       opt.value = m.id;
       opt.textContent = m.name;
-      analyzeMemberSelect.appendChild(opt);
+      sel.appendChild(opt);
     });
+    sel.value = currentVal;
+  });
+
+  if (analyzeMemberSelect) {
+    analyzeMemberSelect.querySelector("option")!.textContent = "-- メンバーを選択（任意） --";
   }
 }
 

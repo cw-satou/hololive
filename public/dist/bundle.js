@@ -17,10 +17,10 @@
     const params = memberIds?.length ? `?member_ids=${memberIds.join(",")}` : "";
     return fetchJSON(`/api/schedule${params}`);
   }
-  async function fetchArchives(channelId, limit = 20) {
+  async function fetchArchives(memberId, limit = 30) {
     const params = new URLSearchParams({ limit: String(limit) });
-    if (channelId)
-      params.set("channel_id", channelId);
+    if (memberId)
+      params.set("member_id", memberId);
     return fetchJSON(`/api/archives?${params}`);
   }
   async function fetchClips(limit = 30) {
@@ -62,6 +62,7 @@
     clipVideos: [],
     analyzeVideoId: "",
     analyzeResult: null,
+    archiveMemberId: "",
     searchMemberId: "",
     searchKeyword: "",
     loading: {},
@@ -319,7 +320,7 @@
     setLoading("archives", true);
     clearError("archives");
     try {
-      state.archiveVideos = await fetchArchives(void 0, 30);
+      state.archiveVideos = await fetchArchives(state.archiveMemberId || void 0, 30);
     } catch (e) {
       setError("archives", e.message);
     } finally {
@@ -364,6 +365,14 @@
       setLoading("analyze", false);
     }
   });
+  var archiveMemberSelect = document.getElementById("archive-member-select");
+  var archiveFilterBtn = document.getElementById("archive-filter-btn");
+  archiveMemberSelect?.addEventListener("change", () => {
+    state.archiveMemberId = archiveMemberSelect.value;
+  });
+  archiveFilterBtn?.addEventListener("click", () => {
+    loadArchives();
+  });
   function render() {
     tabButtons.forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.tab === state.activeTab);
@@ -407,6 +416,10 @@
     }
     if (state.errors["archives"]) {
       container.appendChild(renderError(state.errors["archives"]));
+      return;
+    }
+    if (!state.archiveVideos.length) {
+      container.innerHTML = `<p class="empty-message">\u30A2\u30FC\u30AB\u30A4\u30D6\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F</p>`;
       return;
     }
     state.archiveVideos.forEach((v) => container.appendChild(renderVideoCard(v)));
@@ -481,14 +494,21 @@
         })
       );
     });
-    if (analyzeMemberSelect) {
-      analyzeMemberSelect.innerHTML = `<option value="">-- \u30E1\u30F3\u30D0\u30FC\u3092\u9078\u629E\uFF08\u4EFB\u610F\uFF09 --</option>`;
+    [analyzeMemberSelect, archiveMemberSelect].forEach((sel) => {
+      if (!sel)
+        return;
+      const currentVal = sel.value;
+      sel.innerHTML = `<option value="">-- \u5168\u30E1\u30F3\u30D0\u30FC --</option>`;
       state.members.forEach((m) => {
         const opt = document.createElement("option");
         opt.value = m.id;
         opt.textContent = m.name;
-        analyzeMemberSelect.appendChild(opt);
+        sel.appendChild(opt);
       });
+      sel.value = currentVal;
+    });
+    if (analyzeMemberSelect) {
+      analyzeMemberSelect.querySelector("option").textContent = "-- \u30E1\u30F3\u30D0\u30FC\u3092\u9078\u629E\uFF08\u4EFB\u610F\uFF09 --";
     }
   }
   subscribe(() => {
