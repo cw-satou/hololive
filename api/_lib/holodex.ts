@@ -46,25 +46,39 @@ export async function getLiveStreams(channelIds?: string[]): Promise<HolodexVide
   const url = new URL(`${HOLODEX_BASE_URL}/live`);
   url.searchParams.set("org", HOLOLIVE_ORG);
   url.searchParams.set("status", "live,upcoming");
-  url.searchParams.set("limit", "50");
+  url.searchParams.set("limit", "100");
+  url.searchParams.set("max_upcoming_hours", "168");
   url.searchParams.set("include", "description,live_info");
   if (channelIds?.length) url.searchParams.set("channel_id", channelIds.join(","));
   const res = await fetch(url.toString(), { headers: headers() });
   if (!res.ok) throw new Error(`Holodex live error: ${res.status}`);
-  return res.json();
+  const videos: HolodexVideo[] = await res.json();
+  return videos.filter((v) => v.status === "live" || v.status === "upcoming");
 }
 
 export async function getRecentArchives(channelId?: string, limit = 20): Promise<HolodexVideo[]> {
   const url = new URL(`${HOLODEX_BASE_URL}/videos`);
   url.searchParams.set("org", HOLOLIVE_ORG);
+  url.searchParams.set("type", "stream");
   url.searchParams.set("status", "past");
   url.searchParams.set("limit", String(Math.min(limit, 50)));
-  url.searchParams.set("include", "description,live_info");
   url.searchParams.set("sort", "published_at");
   url.searchParams.set("order", "desc");
   if (channelId) url.searchParams.set("channel_id", channelId);
   const res = await fetch(url.toString(), { headers: headers() });
   if (!res.ok) throw new Error(`Holodex archives error: ${res.status}`);
+  return res.json();
+}
+
+export async function getRecentClips(limit = 30): Promise<HolodexVideo[]> {
+  const url = new URL(`${HOLODEX_BASE_URL}/videos`);
+  url.searchParams.set("org", HOLOLIVE_ORG);
+  url.searchParams.set("type", "clip");
+  url.searchParams.set("limit", String(Math.min(limit, 50)));
+  url.searchParams.set("sort", "published_at");
+  url.searchParams.set("order", "desc");
+  const res = await fetch(url.toString(), { headers: headers() });
+  if (!res.ok) throw new Error(`Holodex clips error: ${res.status}`);
   return res.json();
 }
 

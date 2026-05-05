@@ -4,7 +4,6 @@ import type {
   Member,
   Video,
   AnalyzeResult,
-  Tweet,
   TranscriptSegment,
 } from "./types";
 
@@ -42,6 +41,11 @@ export async function fetchArchives(
   return fetchJSON<Video[]>(`/api/archives?${params}`);
 }
 
+// 参考切り抜き一覧
+export async function fetchClips(limit = 30): Promise<Video[]> {
+  return fetchJSON<Video[]>(`/api/clips?limit=${limit}`);
+}
+
 // 動画分析
 export async function analyzeVideo(
   videoId: string,
@@ -72,38 +76,19 @@ export async function fetchTranscript(
   return fetchJSON<TranscriptSegment[]>(`/api/transcript/${videoId}`);
 }
 
-// X API 残高確認
-export interface XStatus {
-  balance: number;
-  daily_alloc: number;
-  monthly_used: number;
-  monthly_limit: number;
-  monthly_remaining: number;
-  last_updated: string;
-}
-
-export async function fetchXStatus(): Promise<XStatus> {
-  return fetchJSON<XStatus>("/api/x-status");
-}
-
-// ファン感想ツイート
-export async function fetchFanTweets(
-  memberId: string,
-  videoTitle?: string,
-  limit = 20
-): Promise<Tweet[]> {
-  const params = new URLSearchParams({ member_id: memberId, limit: String(limit) });
-  if (videoTitle) params.set("video_title", videoTitle);
-  return fetchJSON<Tweet[]>(`/api/tweets?${params}`);
-}
-
-// メンバー本人のツイート
-export async function fetchMemberTweets(
-  memberId: string,
-  limit = 10
-): Promise<Tweet[]> {
-  const params = new URLSearchParams({ member_id: memberId, limit: String(limit) });
-  return fetchJSON<Tweet[]>(`/api/member-tweets?${params}`);
+// 各プラットフォームの検索URLを生成
+export function getSearchUrls(memberName: string, keyword = ""): {
+  yahoo: string;
+  youtube: string;
+  niconico: string;
+} {
+  const query = keyword ? `${memberName} ${keyword}` : memberName;
+  const enc = encodeURIComponent(query);
+  return {
+    yahoo: `https://search.yahoo.co.jp/realtime/search?p=${enc}`,
+    youtube: `https://www.youtube.com/results?search_query=${enc}`,
+    niconico: `https://www.nicovideo.jp/search/${enc}`,
+  };
 }
 
 // YouTubeのURLから動画IDを抽出

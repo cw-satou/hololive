@@ -5,10 +5,8 @@ import {
   fetchMembers,
   fetchSchedule,
   fetchArchives,
+  fetchClips,
   analyzeVideo,
-  fetchFanTweets,
-  fetchMemberTweets,
-  fetchXStatus,
   extractVideoId,
 } from "./api";
 import {
@@ -25,8 +23,7 @@ import {
   renderMemberFilter,
   renderVideoCard,
   renderAnalysisResult,
-  renderTweets,
-  renderXStatusBadge,
+  renderSearchLinks,
   renderError,
   renderLoading,
 } from "./ui";
@@ -75,6 +72,21 @@ async function loadArchives(): Promise<void> {
   }
 }
 
+// ===== 切り抜きタブ =====
+
+async function loadClips(): Promise<void> {
+  if (state.clipVideos.length) return; // 初回のみ取得
+  setLoading("clips", true);
+  clearError("clips");
+  try {
+    state.clipVideos = await fetchClips(30);
+  } catch (e) {
+    setError("clips", (e as Error).message);
+  } finally {
+    setLoading("clips", false);
+  }
+}
+
 // ===== 分析タブ =====
 
 const analyzeForm = document.getElementById("analyze-form") as HTMLFormElement;
@@ -107,33 +119,6 @@ analyzeForm?.addEventListener("submit", async (e) => {
   }
 });
 
-// ===== ツイートタブ =====
-
-const tweetMemberSelect = document.getElementById("tweet-member-select") as HTMLSelectElement;
-const tweetSearchBtn = document.getElementById("tweet-search-btn") as HTMLButtonElement;
-const tweetVideoTitleInput = document.getElementById("tweet-video-title") as HTMLInputElement;
-
-tweetSearchBtn?.addEventListener("click", async () => {
-  const memberId = tweetMemberSelect.value;
-  if (!memberId) return;
-
-  clearError("tweets");
-  state.tweetMemberId = memberId;
-  state.tweets = [];
-  setLoading("tweets", true);
-
-  try {
-    const videoTitle = tweetVideoTitleInput?.value.trim() || undefined;
-    state.tweets = await fetchFanTweets(memberId, videoTitle, 20);
-    // 検索後に残高を更新して表示に反映
-    state.xStatus = await fetchXStatus();
-  } catch (e) {
-    setError("tweets", (e as Error).message);
-  } finally {
-    setLoading("tweets", false);
-  }
-});
-
 // ===== 描画 =====
 
 function render(): void {
@@ -148,8 +133,9 @@ function render(): void {
   // 各タブの描画
   renderSchedulePanel();
   renderArchivesPanel();
+  renderClipsPanel();
   renderAnalyzePanel();
-  renderTweetsPanel();
+  renderSearchPanel();
 }
 
 function renderSchedulePanel(): void {
@@ -188,6 +174,26 @@ function renderArchivesPanel(): void {
   state.archiveVideos.forEach((v) => container.appendChild(renderVideoCard(v)));
 }
 
+function renderClipsPanel(): void {
+  const container = document.getElementById("clips-videos");
+  if (!container) return;
+  container.innerHTML = "";
+
+  if (state.loading["clips"]) {
+    container.appendChild(renderLoading());
+    return;
+  }
+  if (state.errors["clips"]) {
+    container.appendChild(renderError(state.errors["clips"]));
+    return;
+  }
+  if (!state.clipVideos.length) {
+    container.innerHTML = `<p class="empty-message">切り抜き動画が見つかりませんでした</p>`;
+    return;
+  }
+  state.clipVideos.forEach((v) => container.appendChild(renderVideoCard(v)));
+}
+
 function renderAnalyzePanel(): void {
   const resultContainer = document.getElementById("analyze-result");
   if (!resultContainer) return;
@@ -206,31 +212,19 @@ function renderAnalyzePanel(): void {
   }
 }
 
-function renderTweetsPanel(): void {
-  // 残高バッジ描画
-  const statusSlot = document.getElementById("x-status-slot");
-  if (statusSlot) {
-    statusSlot.innerHTML = "";
-    if (state.xStatus) {
-      statusSlot.appendChild(renderXStatusBadge(state.xStatus));
-    }
-  }
-
-  const container = document.getElementById("tweets-container");
+function renderSearchPanel(): void {
+  const container = document.getElementById("search-container");
   if (!container) return;
   container.innerHTML = "";
-
-  if (state.loading["tweets"]) {
-    container.appendChild(renderLoading());
-    return;
-  }
-  if (state.errors["tweets"]) {
-    container.appendChild(renderError(state.errors["tweets"]));
-    return;
-  }
-  if (state.tweets.length) {
-    container.appendChild(renderTweets(state.tweets));
-  }
+  container.appendChild(
+    renderSearchLinks(
+      state.members,
+      state.searchMemberId,
+      state.searchKeyword,
+      (id) => { state.searchMemberId = id; notify(); },
+      (kw) => { state.searchKeyword = kw; notify(); }
+    )
+  );
 }
 
 // ===== メンバーフィルター描画（共通） =====
@@ -242,7 +236,6 @@ function renderMemberFilters(): void {
     slot.appendChild(
       renderMemberFilter(state.members, state.selectedMembers, (id) => {
         toggleMember(id);
-        // スケジュールタブのフィルターなら再取得
         if (slot.closest("#tab-schedule")) {
           loadSchedule();
         }
@@ -250,41 +243,39 @@ function renderMemberFilters(): void {
     );
   });
 
-  // メンバーセレクトボックスを更新
-  [analyzeMemberSelect, tweetMemberSelect].forEach((sel) => {
-    if (!sel) return;
-    sel.innerHTML = `<option value="">-- メンバーを選択 --</option>`;
+  if (analyzeMemberSelect) {
+    analyzeMemberSelect.innerHTML = `<option value="">-- メンバーを選択（任意） --</option>`;
     state.members.forEach((m) => {
       const opt = document.createElement("option");
       opt.value = m.id;
       opt.textContent = m.name;
-      sel.appendChild(opt);
+      analyzeMemberSelect.appendChild(opt);
     });
-  });
+  }
 }
+
+// ===== タブ切り替え時のデータ遅延ロード =====
+
+subscribe(() => {
+  if (state.activeTab === "clips" && !state.clipVideos.length && !state.loading["clips"]) {
+    loadClips();
+  }
+});
 
 // ===== 初期化 =====
 
 async function init(): Promise<void> {
   subscribe(render);
 
-  // メンバー一覧取得
   try {
     state.members = await fetchMembers();
     renderMemberFilters();
   } catch {
-    // マスターのフォールバックはなし（エラー表示のみ）
+    // メンバー取得失敗は無視
   }
 
-  // 初期タブのデータ取得
   await loadSchedule();
-  loadArchives(); // バックグラウンドで並行取得
-
-  // X API 残高を初期取得
-  fetchXStatus().then((s) => {
-    state.xStatus = s;
-    notify();
-  }).catch(() => { /* 残高取得失敗は無視 */ });
+  loadArchives();
 
   render();
 }

@@ -8,15 +8,19 @@
 </head>
 <body>
   <header class="app-header">
-    <h1>✂️ ホロライブ切り抜きアシスタント</h1>
-    <p class="app-subtitle">配信スケジュール・見どころ分析・字幕抽出・ファン感想</p>
+    <div class="header-logo">
+      <span class="logo-scissors">✂</span>
+      <span class="logo-text">ホロライブ<span class="logo-accent">切り抜き</span>アシスタント</span>
+    </div>
+    <p class="app-subtitle">配信スケジュール・アーカイブ・参考切り抜き・動画分析・ファン反応</p>
   </header>
 
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="schedule">📅 スケジュール</button>
     <button class="tab-btn" data-tab="archives">📼 アーカイブ</button>
+    <button class="tab-btn" data-tab="clips">✂️ 参考切り抜き</button>
     <button class="tab-btn" data-tab="analyze">✨ 動画分析</button>
-    <button class="tab-btn" data-tab="tweets">🐦 ツイート</button>
+    <button class="tab-btn" data-tab="search">🔍 ファン反応</button>
   </nav>
 
   <main class="app-main">
@@ -25,7 +29,7 @@
     <section id="tab-schedule" class="tab-panel active">
       <div class="panel-header">
         <h2>配信スケジュール</h2>
-        <p class="panel-desc">メンバーを選択して絞り込めます</p>
+        <p class="panel-desc">ライブ中・予約配信を表示します。メンバーを選択して絞り込めます</p>
       </div>
       <div class="member-filter-slot" id="schedule-member-filter"></div>
       <div class="video-grid" id="schedule-videos"></div>
@@ -35,8 +39,18 @@
     <section id="tab-archives" class="tab-panel">
       <div class="panel-header">
         <h2>最近のアーカイブ</h2>
+        <p class="panel-desc">公式配信のアーカイブを表示します</p>
       </div>
       <div class="video-grid" id="archive-videos"></div>
+    </section>
+
+    <!-- 参考切り抜きタブ -->
+    <section id="tab-clips" class="tab-panel">
+      <div class="panel-header">
+        <h2>参考切り抜き</h2>
+        <p class="panel-desc">ファンが作成した切り抜き動画です。切り抜きの参考にどうぞ</p>
+      </div>
+      <div class="video-grid" id="clips-videos"></div>
     </section>
 
     <!-- 動画分析タブ -->
@@ -67,32 +81,13 @@
       <div id="analyze-result"></div>
     </section>
 
-    <!-- ツイートタブ -->
-    <section id="tab-tweets" class="tab-panel">
+    <!-- ファン反応タブ -->
+    <section id="tab-search" class="tab-panel">
       <div class="panel-header">
-        <h2>ツイートチェック</h2>
-        <p class="panel-desc">メンバーの投稿やファンの感想を確認</p>
-        <div id="x-status-slot"></div>
+        <h2>ファン反応を検索</h2>
+        <p class="panel-desc">Yahoo! リアルタイム・YouTube・ニコニコでファンの反応を探せます</p>
       </div>
-
-      <div class="tweet-search-form">
-        <div class="form-row">
-          <select id="tweet-member-select" class="select-input">
-            <option value="">-- メンバーを選択 --</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <input
-            id="tweet-video-title"
-            type="text"
-            placeholder="動画タイトルのキーワード（任意）"
-            class="text-input"
-          />
-          <button id="tweet-search-btn" class="btn btn-primary">検索</button>
-        </div>
-      </div>
-
-      <div id="tweets-container"></div>
+      <div id="search-container"></div>
     </section>
 
   </main>

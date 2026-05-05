@@ -1,6 +1,6 @@
 // UI描画ヘルパー
 
-import type { Member, Video, AnalyzeResult, Tweet } from "./types";
+import type { Member, Video, AnalyzeResult } from "./types";
 
 // ===== メンバーフィルター =====
 
@@ -138,60 +138,81 @@ export function renderAnalysisResult(result: AnalyzeResult): HTMLElement {
   return el;
 }
 
-// ===== ツイート =====
+// ===== ファン反応検索リンク =====
 
-export function renderTweets(tweets: Tweet[]): HTMLElement {
-  const container = document.createElement("div");
-  container.className = "tweets-list";
+export function renderSearchLinks(
+  members: Member[],
+  selectedMemberId: string,
+  keyword: string,
+  onMemberChange: (id: string) => void,
+  onKeywordChange: (kw: string) => void
+): HTMLElement {
+  const el = document.createElement("div");
+  el.className = "search-panel";
 
-  if (!tweets.length) {
-    container.innerHTML = `<p class="empty-message">ツイートが見つかりませんでした</p>`;
-    return container;
+  const member = members.find((m) => m.id === selectedMemberId);
+  const memberName = member?.name ?? "";
+
+  // メンバー選択
+  const selectRow = document.createElement("div");
+  selectRow.className = "form-row";
+  const select = document.createElement("select");
+  select.className = "select-input";
+  select.innerHTML = `<option value="">-- メンバーを選択 --</option>`;
+  members.forEach((m) => {
+    const opt = document.createElement("option");
+    opt.value = m.id;
+    opt.textContent = m.name;
+    opt.selected = m.id === selectedMemberId;
+    select.appendChild(opt);
+  });
+  select.addEventListener("change", () => onMemberChange(select.value));
+  selectRow.appendChild(select);
+  el.appendChild(selectRow);
+
+  // キーワード入力
+  const kwRow = document.createElement("div");
+  kwRow.className = "form-row";
+  const kwInput = document.createElement("input");
+  kwInput.type = "text";
+  kwInput.className = "text-input";
+  kwInput.placeholder = "追加キーワード（任意）";
+  kwInput.value = keyword;
+  kwInput.addEventListener("input", () => onKeywordChange(kwInput.value));
+  kwRow.appendChild(kwInput);
+  el.appendChild(kwRow);
+
+  // 検索ボタン群
+  if (memberName) {
+    const q = keyword ? `${memberName} ${keyword}` : memberName;
+    const enc = encodeURIComponent(q);
+    const links = document.createElement("div");
+    links.className = "search-links";
+    links.innerHTML = `
+      <a class="search-btn search-btn-yahoo"
+         href="https://search.yahoo.co.jp/realtime/search?p=${enc}"
+         target="_blank" rel="noopener">
+        🔍 Yahoo! リアルタイム検索
+      </a>
+      <a class="search-btn search-btn-youtube"
+         href="https://www.youtube.com/results?search_query=${enc}"
+         target="_blank" rel="noopener">
+        ▶ YouTube で探す
+      </a>
+      <a class="search-btn search-btn-nico"
+         href="https://www.nicovideo.jp/search/${enc}"
+         target="_blank" rel="noopener">
+        🎬 ニコニコ動画で探す
+      </a>
+    `;
+    el.appendChild(links);
+  } else {
+    const hint = document.createElement("p");
+    hint.className = "empty-message";
+    hint.textContent = "メンバーを選択するとファン反応を検索できます";
+    el.appendChild(hint);
   }
 
-  tweets.forEach((t) => {
-    const el = document.createElement("div");
-    el.className = "tweet-card";
-    el.innerHTML = `
-      <div class="tweet-author">
-        <span class="tweet-name">${escHtml(t.author)}</span>
-        <span class="tweet-username">@${escHtml(t.username)}</span>
-        <span class="tweet-date">${formatDate(t.created_at)}</span>
-      </div>
-      <p class="tweet-text">${escHtml(t.text)}</p>
-      <div class="tweet-metrics">
-        <span>❤️ ${t.likes}</span>
-        <span>🔁 ${t.retweets}</span>
-      </div>
-    `;
-    container.appendChild(el);
-  });
-
-  return container;
-}
-
-// ===== X API 残高バッジ =====
-
-export function renderXStatusBadge(status: import("./types").XStatus): HTMLElement {
-  const el = document.createElement("div");
-  el.className = "x-status-badge";
-
-  // 残高に応じて色を変える
-  const pct = status.balance / status.daily_alloc;
-  const colorClass = pct >= 0.5 ? "ok" : pct > 0 ? "warn" : "empty";
-
-  // 月間残り率
-  const monthlyPct = Math.round(
-    (status.monthly_remaining / status.monthly_limit) * 100
-  );
-
-  el.innerHTML = `
-    <span class="x-status-icon">🐦</span>
-    <span class="x-status-balance ${colorClass}">残高 ${status.balance}</span>
-    <span class="x-status-sep">/</span>
-    <span class="x-status-monthly">今月残り ${status.monthly_remaining}/${status.monthly_limit} (${monthlyPct}%)</span>
-    <span class="x-status-replenish">+${status.daily_alloc}/日</span>
-  `;
   return el;
 }
 
@@ -232,14 +253,6 @@ function formatDateTime(iso: string): string {
       hour: "2-digit",
       minute: "2-digit",
     });
-  } catch {
-    return iso;
-  }
-}
-
-function formatDate(iso: string): string {
-  try {
-    return new Date(iso).toLocaleDateString("ja-JP");
   } catch {
     return iso;
   }

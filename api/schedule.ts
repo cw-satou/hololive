@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getLiveStreams, getVspoChannels, normalizeVideo } from "./_lib/holodex.js";
+import { getLiveStreams, getChannels, normalizeVideo } from "./_lib/holodex.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -7,7 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let channelIds: string[] | undefined;
 
     if (memberIdsParam) {
-      const channels = await getVspoChannels();
+      const channels = await getChannels();
       const requested = memberIdsParam.split(",");
       channelIds = channels
         .filter((ch) => requested.some((r) => (ch.name + (ch.english_name ?? "")).includes(r)))

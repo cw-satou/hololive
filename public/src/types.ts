@@ -65,33 +65,14 @@ export interface ChatHighlight {
   author?: string;
 }
 
-export interface Tweet {
-  id: string;
-  text: string;
-  created_at: string;
-  likes: number;
-  retweets: number;
-  author: string;
-  username: string;
-}
-
 export interface TranscriptSegment {
   text: string;
   start: number;
   duration: number;
 }
 
-export interface XStatus {
-  balance: number;
-  daily_alloc: number;
-  monthly_used: number;
-  monthly_limit: number;
-  monthly_remaining: number;
-  last_updated: string;
-}
-
 // UI状態
-export type Tab = "schedule" | "archives" | "analyze" | "tweets";
+export type Tab = "schedule" | "archives" | "analyze" | "clips" | "search";
 
 export interface AppState {
   activeTab: Tab;
@@ -99,11 +80,11 @@ export interface AppState {
   members: Member[];
   scheduleVideos: Video[];
   archiveVideos: Video[];
+  clipVideos: Video[];
   analyzeVideoId: string;
   analyzeResult: AnalyzeResult | null;
-  tweets: Tweet[];
-  tweetMemberId: string;
-  xStatus: XStatus | null;
+  searchMemberId: string;
+  searchKeyword: string;
   loading: Record<string, boolean>;
   errors: Record<string, string>;
 }

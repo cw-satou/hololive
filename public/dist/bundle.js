@@ -23,6 +23,9 @@
       params.set("channel_id", channelId);
     return fetchJSON(`/api/archives?${params}`);
   }
+  async function fetchClips(limit = 30) {
+    return fetchJSON(`/api/clips?limit=${limit}`);
+  }
   async function analyzeVideo(videoId, memberId, options) {
     return fetchJSON("/api/analyze", {
       method: "POST",
@@ -34,15 +37,6 @@
         include_chat: options?.includeChat ?? true
       })
     });
-  }
-  async function fetchXStatus() {
-    return fetchJSON("/api/x-status");
-  }
-  async function fetchFanTweets(memberId, videoTitle, limit = 20) {
-    const params = new URLSearchParams({ member_id: memberId, limit: String(limit) });
-    if (videoTitle)
-      params.set("video_title", videoTitle);
-    return fetchJSON(`/api/tweets?${params}`);
   }
   function extractVideoId(urlOrId) {
     if (!urlOrId)
@@ -65,11 +59,11 @@
     members: [],
     scheduleVideos: [],
     archiveVideos: [],
+    clipVideos: [],
     analyzeVideoId: "",
     analyzeResult: null,
-    tweets: [],
-    tweetMemberId: "",
-    xStatus: null,
+    searchMemberId: "",
+    searchKeyword: "",
     loading: {},
     errors: {}
   };
@@ -208,47 +202,65 @@
   `;
     return el;
   }
-  function renderTweets(tweets) {
-    const container = document.createElement("div");
-    container.className = "tweets-list";
-    if (!tweets.length) {
-      container.innerHTML = `<p class="empty-message">\u30C4\u30A4\u30FC\u30C8\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F</p>`;
-      return container;
-    }
-    tweets.forEach((t) => {
-      const el = document.createElement("div");
-      el.className = "tweet-card";
-      el.innerHTML = `
-      <div class="tweet-author">
-        <span class="tweet-name">${escHtml(t.author)}</span>
-        <span class="tweet-username">@${escHtml(t.username)}</span>
-        <span class="tweet-date">${formatDate(t.created_at)}</span>
-      </div>
-      <p class="tweet-text">${escHtml(t.text)}</p>
-      <div class="tweet-metrics">
-        <span>\u2764\uFE0F ${t.likes}</span>
-        <span>\u{1F501} ${t.retweets}</span>
-      </div>
-    `;
-      container.appendChild(el);
-    });
-    return container;
-  }
-  function renderXStatusBadge(status) {
+  function renderSearchLinks(members, selectedMemberId, keyword, onMemberChange, onKeywordChange) {
     const el = document.createElement("div");
-    el.className = "x-status-badge";
-    const pct = status.balance / status.daily_alloc;
-    const colorClass = pct >= 0.5 ? "ok" : pct > 0 ? "warn" : "empty";
-    const monthlyPct = Math.round(
-      status.monthly_remaining / status.monthly_limit * 100
-    );
-    el.innerHTML = `
-    <span class="x-status-icon">\u{1F426}</span>
-    <span class="x-status-balance ${colorClass}">\u6B8B\u9AD8 ${status.balance}</span>
-    <span class="x-status-sep">/</span>
-    <span class="x-status-monthly">\u4ECA\u6708\u6B8B\u308A ${status.monthly_remaining}/${status.monthly_limit} (${monthlyPct}%)</span>
-    <span class="x-status-replenish">+${status.daily_alloc}/\u65E5</span>
-  `;
+    el.className = "search-panel";
+    const member = members.find((m) => m.id === selectedMemberId);
+    const memberName = member?.name ?? "";
+    const selectRow = document.createElement("div");
+    selectRow.className = "form-row";
+    const select = document.createElement("select");
+    select.className = "select-input";
+    select.innerHTML = `<option value="">-- \u30E1\u30F3\u30D0\u30FC\u3092\u9078\u629E --</option>`;
+    members.forEach((m) => {
+      const opt = document.createElement("option");
+      opt.value = m.id;
+      opt.textContent = m.name;
+      opt.selected = m.id === selectedMemberId;
+      select.appendChild(opt);
+    });
+    select.addEventListener("change", () => onMemberChange(select.value));
+    selectRow.appendChild(select);
+    el.appendChild(selectRow);
+    const kwRow = document.createElement("div");
+    kwRow.className = "form-row";
+    const kwInput = document.createElement("input");
+    kwInput.type = "text";
+    kwInput.className = "text-input";
+    kwInput.placeholder = "\u8FFD\u52A0\u30AD\u30FC\u30EF\u30FC\u30C9\uFF08\u4EFB\u610F\uFF09";
+    kwInput.value = keyword;
+    kwInput.addEventListener("input", () => onKeywordChange(kwInput.value));
+    kwRow.appendChild(kwInput);
+    el.appendChild(kwRow);
+    if (memberName) {
+      const q = keyword ? `${memberName} ${keyword}` : memberName;
+      const enc = encodeURIComponent(q);
+      const links = document.createElement("div");
+      links.className = "search-links";
+      links.innerHTML = `
+      <a class="search-btn search-btn-yahoo"
+         href="https://search.yahoo.co.jp/realtime/search?p=${enc}"
+         target="_blank" rel="noopener">
+        \u{1F50D} Yahoo! \u30EA\u30A2\u30EB\u30BF\u30A4\u30E0\u691C\u7D22
+      </a>
+      <a class="search-btn search-btn-youtube"
+         href="https://www.youtube.com/results?search_query=${enc}"
+         target="_blank" rel="noopener">
+        \u25B6 YouTube \u3067\u63A2\u3059
+      </a>
+      <a class="search-btn search-btn-nico"
+         href="https://www.nicovideo.jp/search/${enc}"
+         target="_blank" rel="noopener">
+        \u{1F3AC} \u30CB\u30B3\u30CB\u30B3\u52D5\u753B\u3067\u63A2\u3059
+      </a>
+    `;
+      el.appendChild(links);
+    } else {
+      const hint = document.createElement("p");
+      hint.className = "empty-message";
+      hint.textContent = "\u30E1\u30F3\u30D0\u30FC\u3092\u9078\u629E\u3059\u308B\u3068\u30D5\u30A1\u30F3\u53CD\u5FDC\u3092\u691C\u7D22\u3067\u304D\u307E\u3059";
+      el.appendChild(hint);
+    }
     return el;
   }
   function renderError(message) {
@@ -274,13 +286,6 @@
         hour: "2-digit",
         minute: "2-digit"
       });
-    } catch {
-      return iso;
-    }
-  }
-  function formatDate(iso) {
-    try {
-      return new Date(iso).toLocaleDateString("ja-JP");
     } catch {
       return iso;
     }
@@ -321,6 +326,19 @@
       setLoading("archives", false);
     }
   }
+  async function loadClips() {
+    if (state.clipVideos.length)
+      return;
+    setLoading("clips", true);
+    clearError("clips");
+    try {
+      state.clipVideos = await fetchClips(30);
+    } catch (e) {
+      setError("clips", e.message);
+    } finally {
+      setLoading("clips", false);
+    }
+  }
   var analyzeForm = document.getElementById("analyze-form");
   var analyzeInput = document.getElementById("video-url-input");
   var analyzeMemberSelect = document.getElementById("analyze-member-select");
@@ -346,27 +364,6 @@
       setLoading("analyze", false);
     }
   });
-  var tweetMemberSelect = document.getElementById("tweet-member-select");
-  var tweetSearchBtn = document.getElementById("tweet-search-btn");
-  var tweetVideoTitleInput = document.getElementById("tweet-video-title");
-  tweetSearchBtn?.addEventListener("click", async () => {
-    const memberId = tweetMemberSelect.value;
-    if (!memberId)
-      return;
-    clearError("tweets");
-    state.tweetMemberId = memberId;
-    state.tweets = [];
-    setLoading("tweets", true);
-    try {
-      const videoTitle = tweetVideoTitleInput?.value.trim() || void 0;
-      state.tweets = await fetchFanTweets(memberId, videoTitle, 20);
-      state.xStatus = await fetchXStatus();
-    } catch (e) {
-      setError("tweets", e.message);
-    } finally {
-      setLoading("tweets", false);
-    }
-  });
   function render() {
     tabButtons.forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.tab === state.activeTab);
@@ -376,8 +373,9 @@
     });
     renderSchedulePanel();
     renderArchivesPanel();
+    renderClipsPanel();
     renderAnalyzePanel();
-    renderTweetsPanel();
+    renderSearchPanel();
   }
   function renderSchedulePanel() {
     const container = document.getElementById("schedule-videos");
@@ -413,6 +411,25 @@
     }
     state.archiveVideos.forEach((v) => container.appendChild(renderVideoCard(v)));
   }
+  function renderClipsPanel() {
+    const container = document.getElementById("clips-videos");
+    if (!container)
+      return;
+    container.innerHTML = "";
+    if (state.loading["clips"]) {
+      container.appendChild(renderLoading());
+      return;
+    }
+    if (state.errors["clips"]) {
+      container.appendChild(renderError(state.errors["clips"]));
+      return;
+    }
+    if (!state.clipVideos.length) {
+      container.innerHTML = `<p class="empty-message">\u5207\u308A\u629C\u304D\u52D5\u753B\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F</p>`;
+      return;
+    }
+    state.clipVideos.forEach((v) => container.appendChild(renderVideoCard(v)));
+  }
   function renderAnalyzePanel() {
     const resultContainer = document.getElementById("analyze-result");
     if (!resultContainer)
@@ -430,29 +447,26 @@
       resultContainer.appendChild(renderAnalysisResult(state.analyzeResult));
     }
   }
-  function renderTweetsPanel() {
-    const statusSlot = document.getElementById("x-status-slot");
-    if (statusSlot) {
-      statusSlot.innerHTML = "";
-      if (state.xStatus) {
-        statusSlot.appendChild(renderXStatusBadge(state.xStatus));
-      }
-    }
-    const container = document.getElementById("tweets-container");
+  function renderSearchPanel() {
+    const container = document.getElementById("search-container");
     if (!container)
       return;
     container.innerHTML = "";
-    if (state.loading["tweets"]) {
-      container.appendChild(renderLoading());
-      return;
-    }
-    if (state.errors["tweets"]) {
-      container.appendChild(renderError(state.errors["tweets"]));
-      return;
-    }
-    if (state.tweets.length) {
-      container.appendChild(renderTweets(state.tweets));
-    }
+    container.appendChild(
+      renderSearchLinks(
+        state.members,
+        state.searchMemberId,
+        state.searchKeyword,
+        (id) => {
+          state.searchMemberId = id;
+          notify();
+        },
+        (kw) => {
+          state.searchKeyword = kw;
+          notify();
+        }
+      )
+    );
   }
   function renderMemberFilters() {
     const filterContainers = document.querySelectorAll(".member-filter-slot");
@@ -467,18 +481,21 @@
         })
       );
     });
-    [analyzeMemberSelect, tweetMemberSelect].forEach((sel) => {
-      if (!sel)
-        return;
-      sel.innerHTML = `<option value="">-- \u30E1\u30F3\u30D0\u30FC\u3092\u9078\u629E --</option>`;
+    if (analyzeMemberSelect) {
+      analyzeMemberSelect.innerHTML = `<option value="">-- \u30E1\u30F3\u30D0\u30FC\u3092\u9078\u629E\uFF08\u4EFB\u610F\uFF09 --</option>`;
       state.members.forEach((m) => {
         const opt = document.createElement("option");
         opt.value = m.id;
         opt.textContent = m.name;
-        sel.appendChild(opt);
+        analyzeMemberSelect.appendChild(opt);
       });
-    });
+    }
   }
+  subscribe(() => {
+    if (state.activeTab === "clips" && !state.clipVideos.length && !state.loading["clips"]) {
+      loadClips();
+    }
+  });
   async function init() {
     subscribe(render);
     try {
@@ -488,11 +505,6 @@
     }
     await loadSchedule();
     loadArchives();
-    fetchXStatus().then((s) => {
-      state.xStatus = s;
-      notify();
-    }).catch(() => {
-    });
     render();
   }
   init();
