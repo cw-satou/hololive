@@ -1,0 +1,22 @@
+{
+  "name": "hololive-clip-assistant",
+  "version": "1.0.0",
+  "description": "ホロライブ切り抜きアシスタント - 配信スケジュール・見どころ分析・字幕抽出",
+  "private": true,
+  "scripts": {
+    "build": "esbuild public/src/main.ts --bundle --outfile=public/dist/bundle.js --format=iife --target=es2020 --sourcemap",
+    "build:watch": "esbuild public/src/main.ts --bundle --outfile=public/dist/bundle.js --format=iife --target=es2020 --sourcemap --watch",
+    "typecheck": "tsc --project public/tsconfig.json --noEmit",
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "openai": "^4.0.0",
+    "youtube-transcript": "^1.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vercel/node": "^3.0.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.0"
+  }
+}

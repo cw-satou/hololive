@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ホロライブ切り抜きアシスタント</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>✂️ ホロライブ切り抜きアシスタント</h1>
+    <p class="app-subtitle">配信スケジュール・見どころ分析・字幕抽出・ファン感想</p>
+  </header>
+
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="schedule">📅 スケジュール</button>
+    <button class="tab-btn" data-tab="archives">📼 アーカイブ</button>
+    <button class="tab-btn" data-tab="analyze">✨ 動画分析</button>
+    <button class="tab-btn" data-tab="tweets">🐦 ツイート</button>
+  </nav>
+
+  <main class="app-main">
+
+    <!-- スケジュールタブ -->
+    <section id="tab-schedule" class="tab-panel active">
+      <div class="panel-header">
+        <h2>配信スケジュール</h2>
+        <p class="panel-desc">メンバーを選択して絞り込めます</p>
+      </div>
+      <div class="member-filter-slot" id="schedule-member-filter"></div>
+      <div class="video-grid" id="schedule-videos"></div>
+    </section>
+
+    <!-- アーカイブタブ -->
+    <section id="tab-archives" class="tab-panel">
+      <div class="panel-header">
+        <h2>最近のアーカイブ</h2>
+      </div>
+      <div class="video-grid" id="archive-videos"></div>
+    </section>
+
+    <!-- 動画分析タブ -->
+    <section id="tab-analyze" class="tab-panel">
+      <div class="panel-header">
+        <h2>動画分析・切り抜き提案</h2>
+        <p class="panel-desc">YouTubeのURLまたは動画IDを入力してください</p>
+      </div>
+
+      <form id="analyze-form" class="analyze-form">
+        <div class="form-row">
+          <input
+            id="video-url-input"
+            type="text"
+            placeholder="https://www.youtube.com/watch?v=... または動画ID"
+            class="text-input"
+            required
+          />
+        </div>
+        <div class="form-row">
+          <select id="analyze-member-select" class="select-input">
+            <option value="">-- メンバーを選択（任意） --</option>
+          </select>
+          <button type="submit" class="btn btn-primary">分析する</button>
+        </div>
+      </form>
+
+      <div id="analyze-result"></div>
+    </section>
+
+    <!-- ツイートタブ -->
+    <section id="tab-tweets" class="tab-panel">
+      <div class="panel-header">
+        <h2>ツイートチェック</h2>
+        <p class="panel-desc">メンバーの投稿やファンの感想を確認</p>
+        <div id="x-status-slot"></div>
+      </div>
+
+      <div class="tweet-search-form">
+        <div class="form-row">
+          <select id="tweet-member-select" class="select-input">
+            <option value="">-- メンバーを選択 --</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <input
+            id="tweet-video-title"
+            type="text"
+            placeholder="動画タイトルのキーワード（任意）"
+            class="text-input"
+          />
+          <button id="tweet-search-btn" class="btn btn-primary">検索</button>
+        </div>
+      </div>
+
+      <div id="tweets-container"></div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>ホロライブ切り抜きアシスタント</p>
+  </footer>
+
+  <script src="dist/bundle.js"></script>
+</body>
+</html>

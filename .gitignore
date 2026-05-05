@@ -1,0 +1,4 @@
+﻿.env
+node_modules/
+# bundle.js は Vercel で静的配信するため意図的にコミット対象にしている
+.vercel/
