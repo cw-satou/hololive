@@ -1,4 +1,26 @@
-﻿.env
+.env
 node_modules/
 # bundle.js は Vercel で静的配信するため意図的にコミット対象にしている
 .vercel/
+
+# 一時ファイル・生成物(リモートに乗せない)
+tmp/
+output/
+outputs/
+.claude/state/
+Thumbs.db
+desktop.ini
+
+# 切り抜きの素材(配信の動画・音・チャット。権利は配信者側にあるのでリモートに乗せない)
+*.mp4
+*.webm
+*.m4a
+*.wav
+*.mkv
+*.part
+*.live_chat.json
+*.info.json
+00_app/tools/kirinuki/se/
+
+# 動画編集の素材(本人の手元の zip から展開。2026-10-29本人「gitにはおかなくていい」)
+01_input/動画制作素材/

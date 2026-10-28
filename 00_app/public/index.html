@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ほろすぽ切り抜きサポート</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-logo">
+      <span class="logo-scissors">✂</span>
+      <span class="logo-text">ほろすぽ<span class="logo-accent">切り抜き</span>サポート</span>
+    </div>
+    <p class="app-subtitle">ぶいすぽっ！& ホロライブ 切り抜き作成支援ツール</p>
+  </header>
+
+  <!-- プロダクション選択（第一段階フィルター） -->
+  <div class="production-bar">
+    <button class="prod-btn active" data-prod="all">🌐 全て</button>
+    <button class="prod-btn" data-prod="vspo">💜 ぶいすぽ</button>
+    <button class="prod-btn" data-prod="hololive">💙 ホロライブ</button>
+  </div>
+
+  <nav class="tab-nav">
+    <!-- ① 配信確認 -->
+    <div class="tab-group" id="tabgroup-1">
+      <div class="tab-group-label">① 配信確認</div>
+      <div class="tab-group-row">
+        <button class="tab-btn active" data-tab="archives">📼 アーカイブ</button>
+        <button class="tab-btn" data-tab="schedule">📅 スケジュール</button>
+      </div>
+    </div>
+    <!-- ② 盛り上がり確認 -->
+    <div class="tab-group" id="tabgroup-2">
+      <div class="tab-group-label">② 盛り上がり確認</div>
+      <div class="tab-group-row">
+        <button class="tab-btn" data-tab="highlights">📈 盛り上がり</button>
+        <button class="tab-btn" data-tab="search">🔍 ファン反応</button>
+      </div>
+    </div>
+    <!-- ③ 切り抜き作業 -->
+    <div class="tab-group" id="tabgroup-3">
+      <div class="tab-group-label">③ 切り抜き作業</div>
+      <div class="tab-group-row">
+        <button class="tab-btn" data-tab="memo">📌 メモ帳</button>
+        <button class="tab-btn" data-tab="analyze">✨ 動画分析</button>
+        <button class="tab-btn" data-tab="metadata">🎯 メタデータ</button>
+      </div>
+    </div>
+    <!-- 参考情報 -->
+    <div class="tab-group" id="tabgroup-ref">
+      <div class="tab-group-label">参考情報</div>
+      <div class="tab-group-row">
+        <button class="tab-btn" data-tab="clips">✂️ 参考切り抜き</button>
+        <button class="tab-btn" data-tab="rules">📋 ルール</button>
+        <button class="tab-btn" data-tab="channels">📊 統計</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="app-main">
+
+    <!-- スケジュールタブ -->
+    <section id="tab-schedule" class="tab-panel active">
+      <div class="panel-header">
+        <h2>配信スケジュール</h2>
+        <p class="panel-desc">ライブ中・予約配信を表示します。メンバーを選択して絞り込めます</p>
+      </div>
+      <div class="member-filter-slot" id="schedule-member-filter"></div>
+      <div class="video-grid" id="schedule-videos"></div>
+    </section>
+
+    <!-- アーカイブタブ -->
+    <section id="tab-archives" class="tab-panel">
+      <div class="panel-header">
+        <h2>最近のアーカイブ</h2>
+        <p class="panel-desc">公式配信のアーカイブを表示します。メンバー絞り込み時は1年分を検索します</p>
+      </div>
+      <div class="filter-row">
+        <select id="archive-member-select" class="select-input">
+          <option value="">-- 全メンバー --</option>
+        </select>
+        <button id="archive-filter-btn" class="btn btn-primary">絞り込む</button>
+      </div>
+      <div class="video-grid" id="archive-videos"></div>
+    </section>
+
+    <!-- 参考切り抜きタブ -->
+    <section id="tab-clips" class="tab-panel">
+      <div class="panel-header">
+        <h2>参考切り抜き</h2>
+        <p class="panel-desc">ファンが作成した切り抜き動画です。切り抜きスタイルの参考にどうぞ</p>
+      </div>
+      <div class="video-grid" id="clips-videos"></div>
+    </section>
+
+    <!-- 動画分析タブ -->
+    <section id="tab-analyze" class="tab-panel">
+      <div class="panel-header">
+        <h2>動画分析・切り抜き提案</h2>
+        <p class="panel-desc">YouTubeのURLまたは動画IDを入力してください</p>
+      </div>
+      <form id="analyze-form" class="analyze-form">
+        <div class="form-row">
+          <input
+            id="video-url-input"
+            type="text"
+            placeholder="https://www.youtube.com/watch?v=... または動画ID"
+            class="text-input"
+            required
+          />
+        </div>
+        <div class="form-row">
+          <select id="analyze-member-select" class="select-input">
+            <option value="">-- メンバーを選択（任意） --</option>
+          </select>
+          <button type="submit" class="btn btn-primary">分析する</button>
+        </div>
+      </form>
+      <div id="analyze-result"></div>
+    </section>
+
+    <!-- ファン反応タブ -->
+    <section id="tab-search" class="tab-panel">
+      <div class="panel-header">
+        <h2>ファン反応を検索</h2>
+        <p class="panel-desc">Yahoo! リアルタイム・YouTube・ニコニコでファンの反応を探せます</p>
+      </div>
+      <div id="search-container"></div>
+    </section>
+
+    <!-- タイムスタンプメモタブ -->
+    <section id="tab-memo" class="tab-panel">
+      <div class="panel-header">
+        <h2>📌 タイムスタンプメモ帳</h2>
+        <p class="panel-desc">配信を見ながら気になったシーンをタイムスタンプ付きでメモできます</p>
+      </div>
+
+      <div class="memo-section">
+        <h3 class="section-title">動画を開く</h3>
+        <div class="form-row">
+          <input id="stamp-video-url" type="text" class="text-input" placeholder="YouTube URL を貼り付け" />
+          <button id="stamp-open-btn" class="btn btn-secondary">▶ 開く</button>
+        </div>
+      </div>
+
+      <div class="memo-section">
+        <h3 class="section-title">タイマー</h3>
+        <div class="stamp-timer-row">
+          <span class="stamp-elapsed" id="stamp-elapsed">00:00</span>
+          <button id="stamp-start-btn" class="btn btn-primary">▶ 開始</button>
+        </div>
+      </div>
+
+      <div class="memo-section">
+        <h3 class="section-title">メモを追加</h3>
+        <div class="form-row">
+          <input id="stamp-note-input" type="text" class="text-input" placeholder="シーンのメモ（Enterで追加）" />
+          <button id="stamp-add-btn" class="btn btn-primary">📌 追加</button>
+        </div>
+      </div>
+
+      <div class="memo-section">
+        <div class="memo-list-header">
+          <h3 class="section-title">メモ一覧</h3>
+          <div class="memo-actions">
+            <button id="stamp-copy-btn" class="btn btn-secondary">📋 全コピー</button>
+            <button id="stamp-clear-btn" class="btn btn-danger">🗑 全削除</button>
+          </div>
+        </div>
+        <div id="stamp-notes-list"></div>
+      </div>
+
+      <hr class="memo-divider" />
+
+      <div class="panel-header">
+        <h2>⏱ ショート動画プランナー</h2>
+        <p class="panel-desc">元動画の長さから、ショート動画が何本作れるかを計算します</p>
+      </div>
+
+      <div class="memo-section">
+        <h3 class="section-title">元動画の長さ</h3>
+        <div class="form-row shorts-form-row">
+          <input id="shorts-min" type="number" min="0" class="text-input shorts-num" placeholder="0" />
+          <span class="shorts-unit">分</span>
+          <input id="shorts-sec" type="number" min="0" max="59" class="text-input shorts-num" placeholder="0" />
+          <span class="shorts-unit">秒</span>
+          <button id="shorts-calc-btn" class="btn btn-primary">計算する</button>
+        </div>
+      </div>
+
+      <div id="shorts-result"></div>
+    </section>
+
+    <!-- 切り抜きルールタブ -->
+    <section id="tab-rules" class="tab-panel">
+      <div class="panel-header">
+        <h2>📋 切り抜きルール一覧</h2>
+        <p class="panel-desc">各プロダクションの公式ガイドラインをまとめています。最新情報は公式サイトをご確認ください</p>
+      </div>
+      <div id="rules-container"></div>
+    </section>
+
+    <!-- AIメタデータ生成タブ -->
+    <section id="tab-metadata" class="tab-panel">
+      <div class="panel-header">
+        <h2>🎯 AIメタデータ生成</h2>
+        <p class="panel-desc">動画情報を入力するとAIが切り抜き用タイトル・説明文・タグを生成します（OpenAI使用）</p>
+      </div>
+
+      <div class="analyze-form">
+        <div class="form-row">
+          <input id="meta-video-title" type="text" class="text-input" placeholder="元動画のタイトル" />
+        </div>
+        <div class="form-row">
+          <input id="meta-channel" type="text" class="text-input" placeholder="チャンネル名（任意）" />
+        </div>
+        <div class="form-row">
+          <textarea id="meta-desc" class="text-input" rows="3" placeholder="動画の説明文（任意・300文字まで参考にします）"></textarea>
+        </div>
+        <div class="form-row">
+          <select id="meta-platform" class="select-input">
+            <option value="youtube">YouTube（通常動画）</option>
+            <option value="shorts">YouTube Shorts</option>
+            <option value="x">X（旧Twitter）</option>
+          </select>
+          <button id="meta-submit" class="btn btn-primary">🎯 メタデータを生成</button>
+        </div>
+      </div>
+
+      <div id="meta-result"></div>
+    </section>
+
+    <!-- チャンネル統計タブ -->
+    <section id="tab-channels" class="tab-panel">
+      <div class="panel-header">
+        <h2>📊 チャンネル人気統計</h2>
+        <p class="panel-desc">登録者数ランキングです。どのライバーの切り抜きを作るか参考にしてください</p>
+      </div>
+      <div id="channels-container"></div>
+    </section>
+
+    <!-- 盛り上がり分析タブ -->
+    <section id="tab-highlights" class="tab-panel">
+      <div class="panel-header">
+        <h2>📈 盛り上がり分析</h2>
+        <p class="panel-desc">視聴者の再生ヒートマップとタイムスタンプコメントで盛り上がりポイントを把握できます</p>
+      </div>
+
+      <div class="analyze-form">
+        <div class="form-row">
+          <input
+            id="highlights-video-url"
+            type="text"
+            class="text-input"
+            placeholder="https://www.youtube.com/watch?v=... または動画ID"
+          />
+          <button id="highlights-submit" class="btn btn-primary">📈 取得する</button>
+        </div>
+      </div>
+
+      <!-- ヒートマップ -->
+      <div class="highlights-section">
+        <h3 class="highlights-section-title">📊 再生ヒートマップ（Most Replayed）</h3>
+        <p class="panel-desc">バーをクリックするとその時間から動画を再生できます</p>
+        <div id="highlights-heatmap"></div>
+      </div>
+
+      <!-- タイムスタンプコメント -->
+      <div class="highlights-section">
+        <div class="highlights-comments-header">
+          <h3 class="highlights-section-title">💬 タイムスタンプコメント</h3>
+          <div class="sort-toggle">
+            <button id="highlights-sort-time" class="sort-btn active">時間順</button>
+            <button id="highlights-sort-likes" class="sort-btn">いいね順</button>
+          </div>
+        </div>
+        <p class="panel-desc">タイムスタンプ付きコメントを抽出しています。クリックで該当時間を再生できます</p>
+        <div id="highlights-comments"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>ほろすぽ切り抜きサポート｜ぶいすぽっ！&amp; ホロライブ 切り抜き作成支援</p>
+  </footer>
+
+  <script src="dist/bundle.js"></script>
+</body>
+</html>
