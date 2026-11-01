@@ -1,5 +1,5 @@
 ﻿{
-  "FilePath": "C:\\Users\\satou\\ドキュメント\\git\\19_hololive\\03_doing\\20261029_P_uGDdotlF4\\clips\\clip_04.ymmp",
+  "FilePath": "C:\\Users\\satou\\ドキュメント\\git\\19_hololive\\03_doing\\2026-10-29\\P_uGDdotlF4\\clips\\clip_04.ymmp",
   "SelectedTimelineIndex": 0,
   "Timelines": [
     {
@@ -26,7 +26,7 @@
         {
           "$type": "YukkuriMovieMaker.Project.Items.VideoItem, YukkuriMovieMaker",
           "IsWaveformEnabled": false,
-          "FilePath": "C:\\Users\\satou\\ドキュメント\\git\\19_hololive\\03_doing\\20261029_P_uGDdotlF4\\clips\\clip_04.mp4",
+          "FilePath": "C:\\Users\\satou\\ドキュメント\\git\\19_hololive\\03_doing\\2026-10-29\\P_uGDdotlF4\\clips\\clip_04.mp4",
           "AudioTrackIndex": 0,
           "Volume": {
             "Values": [
