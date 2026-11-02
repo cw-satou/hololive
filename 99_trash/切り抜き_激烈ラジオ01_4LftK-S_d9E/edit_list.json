@@ -1,0 +1,16 @@
+{
+ "video": "https://www.youtube.com/watch?v=4LftK-S_d9E",
+ "title": "1.始まってすぐボツ",
+ "channel": "盛合でぇすけの激烈傲慢独断偏見ラジオ",
+ "segments": [
+  {"no": 0, "hook": true, "start": 294.0, "end": 301.0, "label": "", "score": 0},
+  {"no": 1, "start": 10.0, "end": 47.0, "label": "第1回、番組名を忘れる", "score": 0},
+  {"no": 2, "start": 63.0, "end": 113.0, "label": "撮り溜めは全部ボツ", "score": 0},
+  {"no": 3, "start": 119.0, "end": 147.0, "label": "自己紹介と「声だけおじさん」", "score": 0},
+  {"no": 4, "start": 162.0, "end": 205.5, "label": "このチャンネルの目的", "score": 0},
+  {"no": 5, "start": 206.0, "end": 240.0, "label": "初回からネガティブしかない", "score": 0},
+  {"no": 6, "start": 273.0, "end": 316.5, "label": "見直した結論は「見たくない」", "score": 0},
+  {"no": 7, "start": 553.0, "end": 573.0, "label": "次回は何を話す?", "score": 0},
+  {"no": 8, "start": 592.0, "end": 623.0, "label": "次回予告", "score": 0}
+ ]
+}

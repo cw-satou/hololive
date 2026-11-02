@@ -22,10 +22,11 @@
 
 ## 切り抜き支援ツール(手元のPCで動かす)
 
-`00_app/tools/kirinuki/kirinuki.py`。ライブアーカイブ1本から、盛り上がった場面をたくさん拾い、時刻の順につないだ1本の切り抜きを、字幕・補足・効果音つきのYMM4のプロジェクトとして作る。
+**2026-11-02に08の共通の道具へ移した**(本人「19 17 を一緒に08に取り込んで」)。正本は `08_omnipost/00_app/tools/kirinuki/kirinuki.py`、説明は同じフォルダの `README.md`、作り方の根拠は `切り抜きのコツ.md`。この事業だけの設定(ガイドライン表記・16:9)は `00_app/kirinuki.json`。移す前の版は `90_archive/2026-11-02_kirinuki_08へ統合前/`。
+ライブアーカイブ1本から、盛り上がった場面をたくさん拾い、時刻の順につないだ1本の切り抜きを、ジェットカット・字幕・補足・効果音つきのYMM4のプロジェクトと確認用mp4として作る。
 
 ```text
-python 00_app/tools/kirinuki/kirinuki.py all <配信のURL> --minutes 10
+python E:/Users/satou/Documents/git/08_omnipost/00_app/tools/kirinuki/kirinuki.py all <配信のURL> --biz E:/Users/satou/Documents/git/19_hololive --minutes 10
 ```
 
 1. fetch: 配信の情報・コメント・チャットのリプレイ・動画を落とす(区間だけを落とす形は2026-10-29に止まって進まなかったので、動画は丸ごと落とす)
@@ -35,5 +36,5 @@ python 00_app/tools/kirinuki/kirinuki.py all <配信のURL> --minutes 10
 5. 作り方の根拠(ガイドライン・尺・冒頭のつかみ・字幕・効果音・サムネ)は `00_app/tools/kirinuki/切り抜きのコツ.md`。メンバーカラーは `member_colors.json`
 6. 1場面だけを見たいときは `cut`・`ymmp` <候補の番号> で `clips/clip_NN.ymmp`
 
-作業フォルダは `03_doing/<日付>_<動画ID>/`。効果音は `00_app/tools/kirinuki/se/` に wav か mp3 を置くと入る。
+作業フォルダは `03_doing/<YYYY-MM-DD>/切り抜き_<動画ID>/`。効果音は 08 の `tools/kirinuki/se/` に wav か mp3 を置くと入る。
 YMM4の部品は 18 と同じ `discoverly/.claude/skills/ymm4-mv/scripts/ymmp_lib.py` を使う。切り抜きはカバー株式会社の二次創作ガイドラインに従う。
