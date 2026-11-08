@@ -1,0 +1,406 @@
+{
+ "_説明": "08の共通のファンサイトの道具(08_omnipost/00_app/tools/fansite/fansite.py)が読む、この事業の設定(2026-11-08)。メンバー=ホロライブ公式サイト https://hololive.hololivepro.com/talents/ の日本のグループ(0〜5期・holoX・ゲーマーズ・ReGLOSS・FLOW GLOW)の現役。色=08の kirinuki/member_colors.json。卒業生(?gp=alum)は外した。沙花叉クロヱ(公式ページに【配信活動終了】)も外した",
+ "site": "https://spicastar.info/hololive",
+ "title": "ほろすこーぷ！",
+ "tagline": "ホロライブの配信と動画を、もっと見やすく。予定・アーカイブ・見どころ・相性診断まで、ホロリスのためのまとめサイト。",
+ "org": "ホロライブ",
+ "accent": "#2f7fe0",
+ "guideline_url": "https://hololivepro.com/terms/",
+ "official": {
+  "name": "ホロライブ公式",
+  "channel": "UCJFZiqLMntJufDCHc6bQixg",
+  "x": "hololivetv"
+ },
+ "members": [
+  {
+   "id": "tokino_sora",
+   "name": "ときのそら",
+   "name_en": "Tokino Sora",
+   "group": "0期生",
+   "channel": "UCp6993wxpyDPHUpavwDFqgg",
+   "x": "tokino_sora",
+   "color": "#266AFF",
+   "profile_url": "https://hololive.hololivepro.com/talents/tokino-sora/"
+  },
+  {
+   "id": "roboco_san",
+   "name": "ロボ子さん",
+   "name_en": "Roboco San",
+   "group": "0期生",
+   "channel": "UCDqI2jOz0weumE8s7paEk6g",
+   "x": "robocosan",
+   "color": "#D192FE",
+   "profile_url": "https://hololive.hololivepro.com/talents/roboco-san/"
+  },
+  {
+   "id": "azki",
+   "name": "AZKi",
+   "name_en": "Azki",
+   "group": "0期生",
+   "channel": "UC0TXe_LYZ4scaW2XMyi5_kw",
+   "x": "AZKi_VDiVA",
+   "color": "#FC3488",
+   "profile_url": "https://hololive.hololivepro.com/talents/azki/"
+  },
+  {
+   "id": "sakuramiko",
+   "name": "さくらみこ",
+   "name_en": "Sakuramiko",
+   "group": "0期生",
+   "channel": "UC-hM6YJuNYVAmUWxeIr9FeA",
+   "x": "sakuramiko35",
+   "color": "#FF8FDF",
+   "profile_url": "https://hololive.hololivepro.com/talents/sakuramiko/"
+  },
+  {
+   "id": "hoshimachi_suisei",
+   "name": "星街すいせい",
+   "name_en": "Hoshimachi Suisei",
+   "group": "0期生",
+   "channel": "UC5CwaMl1eIgY8h02uZw7u8A",
+   "x": "suisei_hosimati",
+   "color": "#49E0F4",
+   "profile_url": "https://hololive.hololivepro.com/talents/hoshimachi-suisei/"
+  },
+  {
+   "id": "aki_rosenthal",
+   "name": "アキ・ローゼンタール",
+   "name_en": "Aki Rosenthal",
+   "group": "1期生",
+   "channel": "UCFTLzh12_nrtzqBPsTCqenA",
+   "x": "akirosenthal",
+   "color": "#4E7FFC",
+   "profile_url": "https://hololive.hololivepro.com/talents/aki-rosenthal/"
+  },
+  {
+   "id": "akai_haato",
+   "name": "赤井はあと",
+   "name_en": "Akai Haato",
+   "group": "1期生",
+   "channel": "UC1CfXB_kRs3C-zaeTG3oGyg",
+   "x": "akaihaato",
+   "color": "#FE4872",
+   "profile_url": "https://hololive.hololivepro.com/talents/akai-haato/"
+  },
+  {
+   "id": "shirakami_fubuki",
+   "name": "白上フブキ",
+   "name_en": "Shirakami Fubuki",
+   "group": "1期生",
+   "channel": "UCdn5BQ06XqgXoAxIhbqw5Rg",
+   "x": "shirakamifubuki",
+   "color": "#43BFEF",
+   "profile_url": "https://hololive.hololivepro.com/talents/shirakami-fubuki/"
+  },
+  {
+   "id": "natsuiro_matsuri",
+   "name": "夏色まつり",
+   "name_en": "Natsuiro Matsuri",
+   "group": "1期生",
+   "channel": "UCQ0UDLQCjY0rmuxCDE38FGg",
+   "x": "natsuiromatsuri",
+   "color": "#FDAB45",
+   "profile_url": "https://hololive.hololivepro.com/talents/natsuiro-matsuri/"
+  },
+  {
+   "id": "nakiri_ayame",
+   "name": "百鬼あやめ",
+   "name_en": "Nakiri Ayame",
+   "group": "2期生",
+   "channel": "UC7fk0CB07ly8oSl0aqKkqFg",
+   "x": "nakiriayame",
+   "color": "#DE3E28",
+   "profile_url": "https://hololive.hololivepro.com/talents/nakiri-ayame/"
+  },
+  {
+   "id": "yuzuki_choco",
+   "name": "癒月ちょこ",
+   "name_en": "Yuzuki Choco",
+   "group": "2期生",
+   "channel": "UC1suqwovbL1kzsoaZgFZLKg",
+   "x": "yuzukichococh",
+   "color": "#FE739E",
+   "profile_url": "https://hololive.hololivepro.com/talents/yuzuki-choco/"
+  },
+  {
+   "id": "oozora_subaru",
+   "name": "大空スバル",
+   "name_en": "Oozora Subaru",
+   "group": "2期生",
+   "channel": "UCvzGlP9oQwU--Y0r9id_jnA",
+   "x": "oozorasubaru",
+   "color": "#E5FB67",
+   "profile_url": "https://hololive.hololivepro.com/talents/oozora-subaru/"
+  },
+  {
+   "id": "usada_pekora",
+   "name": "兎田ぺこら",
+   "name_en": "Usada Pekora",
+   "group": "3期生",
+   "channel": "UC1DCedRgGHBdm81E1llLhOQ",
+   "x": "usadapekora",
+   "color": "#7EC2FE",
+   "profile_url": "https://hololive.hololivepro.com/talents/usada-pekora/"
+  },
+  {
+   "id": "shiranui_flare",
+   "name": "不知火フレア",
+   "name_en": "Shiranui Flare",
+   "group": "3期生",
+   "channel": "UCvInZx9h3jC2JzsIzoOebWg",
+   "x": "shiranuiflare",
+   "color": "#FE3D1C",
+   "profile_url": "https://hololive.hololivepro.com/talents/shiranui-flare/"
+  },
+  {
+   "id": "shirogane_noel",
+   "name": "白銀ノエル",
+   "name_en": "Shirogane Noel",
+   "group": "3期生",
+   "channel": "UCdyqAaZDKHXg4Ahi7VENThQ",
+   "x": "shiroganenoel",
+   "color": "#ACBDC5",
+   "profile_url": "https://hololive.hololivepro.com/talents/shirogane-noel/"
+  },
+  {
+   "id": "houshou_marine",
+   "name": "宝鐘マリン",
+   "name_en": "Houshou Marine",
+   "group": "3期生",
+   "channel": "UCCzUftO8KOVkV4wQG1vkUvg",
+   "x": "houshoumarine",
+   "color": "#BA2C2B",
+   "profile_url": "https://hololive.hololivepro.com/talents/houshou-marine/"
+  },
+  {
+   "id": "tsunomaki_watame",
+   "name": "角巻わため",
+   "name_en": "Tsunomaki Watame",
+   "group": "4期生",
+   "channel": "UCqm3BQLlJfvkTsX_hvm0UmA",
+   "x": "tsunomakiwatame",
+   "color": "#F9AFB2",
+   "profile_url": "https://hololive.hololivepro.com/talents/tsunomaki-watame/"
+  },
+  {
+   "id": "tokoyami_towa",
+   "name": "常闇トワ",
+   "name_en": "Tokoyami Towa",
+   "group": "4期生",
+   "channel": "UC1uv2Oq6kNxgATlCiez59hw",
+   "x": "tokoyamitowa",
+   "color": "#BA92CA",
+   "profile_url": "https://hololive.hololivepro.com/talents/tokoyami-towa/"
+  },
+  {
+   "id": "himemori_luna",
+   "name": "姫森ルーナ",
+   "name_en": "Himemori Luna",
+   "group": "4期生",
+   "channel": "UCa9Y57gfeY0Zro_noHRVrnw",
+   "x": "himemoriluna",
+   "color": "#F7ABD5",
+   "profile_url": "https://hololive.hololivepro.com/talents/himemori-luna/"
+  },
+  {
+   "id": "yukihana_lamy",
+   "name": "雪花ラミィ",
+   "name_en": "Yukihana Lamy",
+   "group": "5期生",
+   "channel": "UCFKOVgVbGmX65RxO3EtH3iw",
+   "x": "yukihanalamy",
+   "color": "#6ABADF",
+   "profile_url": "https://hololive.hololivepro.com/talents/yukihana-lamy/"
+  },
+  {
+   "id": "momosuzu_nene",
+   "name": "桃鈴ねね",
+   "name_en": "Momosuzu Nene",
+   "group": "5期生",
+   "channel": "UCAWSyEs_Io8MtpY3m-zqILA",
+   "x": "momosuzunene",
+   "color": "#EEAC5E",
+   "profile_url": "https://hololive.hololivepro.com/talents/momosuzu-nene/"
+  },
+  {
+   "id": "shishiro_botan",
+   "name": "獅白ぼたん",
+   "name_en": "Shishiro Botan",
+   "group": "5期生",
+   "channel": "UCUKD-uaobj9jiqB-VXt71mA",
+   "x": "shishirobotan",
+   "color": "#A2D5C4",
+   "profile_url": "https://hololive.hololivepro.com/talents/shishiro-botan/"
+  },
+  {
+   "id": "omaru_polka",
+   "name": "尾丸ポルカ",
+   "name_en": "Omaru Polka",
+   "group": "5期生",
+   "channel": "UCK9V2B22uJYu3N7eR_BT9QA",
+   "x": "omarupolka",
+   "color": "#B92731",
+   "profile_url": "https://hololive.hololivepro.com/talents/omaru-polka/"
+  },
+  {
+   "id": "la_darknesss",
+   "name": "ラプラス・ダークネス",
+   "name_en": "La Darknesss",
+   "group": "秘密結社holoX",
+   "channel": "UCENwRMx5Yh42zWpzURebzTw",
+   "x": "LaplusDarknesss",
+   "color": "#351E3B",
+   "profile_url": "https://hololive.hololivepro.com/talents/la-darknesss/"
+  },
+  {
+   "id": "takane_lui",
+   "name": "鷹嶺ルイ",
+   "name_en": "Takane Lui",
+   "group": "秘密結社holoX",
+   "channel": "UCs9_O1tRPMQTHQ-N_L6FU2g",
+   "x": "takanelui",
+   "color": "#B84A67",
+   "profile_url": "https://hololive.hololivepro.com/talents/takane-lui/"
+  },
+  {
+   "id": "hakui_koyori",
+   "name": "博衣こより",
+   "name_en": "Hakui Koyori",
+   "group": "秘密結社holoX",
+   "channel": "UC6eWCld0KwmyHFbAqK3V-Rw",
+   "x": "hakuikoyori",
+   "color": "#F09CC0",
+   "profile_url": "https://hololive.hololivepro.com/talents/hakui-koyori/"
+  },
+  {
+   "id": "kazama_iroha",
+   "name": "風真いろは",
+   "name_en": "Kazama Iroha",
+   "group": "秘密結社holoX",
+   "channel": "UC_vMYWcDjmfdpH6r4TTn1MQ",
+   "x": "kazamairohach",
+   "color": "#73B5B1",
+   "profile_url": "https://hololive.hololivepro.com/talents/kazama-iroha/"
+  },
+  {
+   "id": "ookami_mio",
+   "name": "大神ミオ",
+   "name_en": "Ookami Mio",
+   "group": "ホロライブゲーマーズ",
+   "channel": "UCp-5t9SrOQwXMU7iIjQfARg",
+   "x": "ookamimio",
+   "color": "#C71E3E",
+   "profile_url": "https://hololive.hololivepro.com/talents/ookami-mio/"
+  },
+  {
+   "id": "nekomata_okayu",
+   "name": "猫又おかゆ",
+   "name_en": "Nekomata Okayu",
+   "group": "ホロライブゲーマーズ",
+   "channel": "UCvaTdHTWBGv3MKj3KVqJVCw",
+   "x": "nekomataokayu",
+   "color": "#B190FC",
+   "profile_url": "https://hololive.hololivepro.com/talents/nekomata-okayu/"
+  },
+  {
+   "id": "inugami_korone",
+   "name": "戌神ころね",
+   "name_en": "Inugami Korone",
+   "group": "ホロライブゲーマーズ",
+   "channel": "UChAnqc_AY5_I3Px5dig3X1Q",
+   "x": "inugamikorone",
+   "color": "#FEE039",
+   "profile_url": "https://hololive.hololivepro.com/talents/inugami-korone/"
+  },
+  {
+   "id": "otonose_kanade",
+   "name": "音乃瀬奏",
+   "name_en": "Otonose Kanade",
+   "group": "ReGLOSS",
+   "channel": "UCWQtYtq9EOB4-I5P-3fh8lA",
+   "x": "otonosekanade",
+   "color": "#FFE7B5",
+   "profile_url": "https://hololive.hololivepro.com/talents/otonose-kanade/"
+  },
+  {
+   "id": "ichijou_ririka",
+   "name": "一条莉々華",
+   "name_en": "Ichijou Ririka",
+   "group": "ReGLOSS",
+   "channel": "UCtyWhCj3AqKh2dXctLkDtng",
+   "x": "ichijouririka",
+   "color": "#F47DA9",
+   "profile_url": "https://hololive.hololivepro.com/talents/ichijou-ririka/"
+  },
+  {
+   "id": "juufuutei_raden",
+   "name": "儒烏風亭らでん",
+   "name_en": "Juufuutei Raden",
+   "group": "ReGLOSS",
+   "channel": "UCdXAk5MpyLD8594lm_OvtGQ",
+   "x": "juufuuteiraden",
+   "color": "#3C7C71",
+   "profile_url": "https://hololive.hololivepro.com/talents/juufuutei-raden/"
+  },
+  {
+   "id": "todoroki_hajime",
+   "name": "轟はじめ",
+   "name_en": "Todoroki Hajime",
+   "group": "ReGLOSS",
+   "channel": "UC1iA6_NT4mtAcIII6ygrvCw",
+   "x": "todoroki_hajime",
+   "color": "#B6B9FF",
+   "profile_url": "https://hololive.hololivepro.com/talents/todoroki-hajime/"
+  },
+  {
+   "id": "isaki_riona",
+   "name": "響咲リオナ",
+   "name_en": "Isaki Riona",
+   "group": "FLOW GLOW",
+   "channel": "UC9LSiN9hXI55svYEBrrK-tw",
+   "x": "isakiriona",
+   "color": "#EA4980",
+   "profile_url": "https://hololive.hololivepro.com/talents/isaki-riona/"
+  },
+  {
+   "id": "koganei_niko",
+   "name": "虎金妃笑虎",
+   "name_en": "Koganei Niko",
+   "group": "FLOW GLOW",
+   "channel": "UCuI_opAVX6qbxZY-a-AxFuQ",
+   "x": "koganeiniko",
+   "color": "#E68638",
+   "profile_url": "https://hololive.hololivepro.com/talents/koganei-niko/"
+  },
+  {
+   "id": "mizumiya_su",
+   "name": "水宮枢",
+   "name_en": "Mizumiya Su",
+   "group": "FLOW GLOW",
+   "channel": "UCjk2nKmHzgH5Xy-C5qYRd5A",
+   "x": "mizumiya_su",
+   "color": "#89D8F0",
+   "profile_url": "https://hololive.hololivepro.com/talents/mizumiya-su/"
+  },
+  {
+   "id": "rindo_chihaya",
+   "name": "輪堂千速",
+   "name_en": "Rindo Chihaya",
+   "group": "FLOW GLOW",
+   "channel": "UCKMWFR6lAstLa7Vbf5dH7ig",
+   "x": "rindochihaya",
+   "color": "#61B7B9",
+   "profile_url": "https://hololive.hololivepro.com/talents/rindo-chihaya/"
+  },
+  {
+   "id": "kikirara_vivi",
+   "name": "綺々羅々ヴィヴィ",
+   "name_en": "Kikirara Vivi",
+   "group": "FLOW GLOW",
+   "channel": "UCGzTVXqMQHa4AgJVJIVvtDQ",
+   "x": "kikiraravivi",
+   "color": "#F096C9",
+   "profile_url": "https://hololive.hololivepro.com/talents/kikirara-vivi/"
+  }
+ ]
+}
