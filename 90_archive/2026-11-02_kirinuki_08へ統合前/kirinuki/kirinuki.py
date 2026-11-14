@@ -31,7 +31,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 BIZ = os.path.abspath(os.path.join(HERE, "..", "..", ".."))          # 19_hololive
 DOING = os.path.join(BIZ, "03_doing")
-YMM_LIB = r"E:\Users\satou\Documents\git\discoverly\.claude\skills\ymm4-mv\scripts"   # 18 で使っているYMM4の部品
+YMM_LIB = r"E:\Users\satou\Documents\git\08_omnipost\.claude\skills\ymm4-mv\scripts"   # 18 で使っているYMM4の部品
 SE_DIR = os.path.join(HERE, "se")
 # 効果音とつなぎ目(2026-10-29本人の素材 zip から。gitには置かない → 01_input/動画制作素材/)
 ASSET_SE = os.path.join(BIZ, "01_input", "動画制作素材", "素材類", "YMM4", "効果音（割と使うのが入ってる）")

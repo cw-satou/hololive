@@ -37,4 +37,4 @@ python E:/Users/satou/Documents/git/08_omnipost/00_app/tools/kirinuki/kirinuki.p
 6. 1場面だけを見たいときは `cut`・`ymmp` <候補の番号> で `clips/clip_NN.ymmp`
 
 作業フォルダは `03_doing/<YYYY-MM-DD>/切り抜き_<動画ID>/`。効果音は 08 の `tools/kirinuki/se/` に wav か mp3 を置くと入る。
-YMM4の部品は 18 と同じ `discoverly/.claude/skills/ymm4-mv/scripts/ymmp_lib.py` を使う。切り抜きはカバー株式会社の二次創作ガイドラインに従う。
+YMM4の部品は 18 と同じ `08_omnipost/.claude/skills/ymm4-mv/scripts/ymmp_lib.py` を使う。切り抜きはカバー株式会社の二次創作ガイドラインに従う。
